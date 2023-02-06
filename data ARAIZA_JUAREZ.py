@@ -16,17 +16,17 @@ data = ['NAFTRAC_20210129.csv', 'NAFTRAC_20210226.csv', 'NAFTRAC_20210331.csv', 
 # Hacer lista de dataframes
 df_list = [pd.read_csv(file, skiprows=2) for file in data]
 
-# Concatenate the list of dataframes vertically
+# Concatenar la lista verticalmente
 vertical_concat = pd.concat(df_list, axis=0)
 
-# Group the concatenated dataframe by 'Ticker' and count the number of occurrences of each Ticker
+# Agrupar los Ticker y contar el numero de veces que se repiten
 cant = vertical_concat.groupby(['Ticker'])['Ticker'].count().to_frame()
 
-# Filter the 'cant' dataframe to only show Tickers that have 25 occurrences
+# Filtrar solamente los tickers que se repiten 25 veces 
 occurrences = cant[cant['Ticker'] == 25]
 occurrences
 
-
+# Sumar para sacar el total de tickers que se repitieron
 cant = vertical_concat.groupby(['Ticker'])['Ticker'].count().to_frame()
 cant24 = cant[cant['Ticker'] == 25]
 total_tickers = cant24['Ticker'].sum()
