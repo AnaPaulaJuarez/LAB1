@@ -143,7 +143,26 @@ def rendimientoAtribuido(estrategiaA : pd.DataFrame, estrategiaB : pd.DataFrame,
 
     return resultados
 
-    
+
+def rendimientoAtribuido(estrategiaA : pd.DataFrame, estrategiaB : pd.DataFrame, tasaRiesgo : float):
+
+    resultados = pd.DataFrame(index = ["prom_mensual", "acum_mensual", "ratio_sharpe"], columns = ["Descripción", "Estrategia A", "Estrategia B"]) #Creamos un nuevo DataFrame "RESULTADOS"
+    resultados.loc["prom_mensual", "Descripción"] = "Rend Prom mensual" #Asignamos valores a las celdas
+    resultados.loc["acum_mensual", "Descripción"] = "Rend mensual acum" #Asignamos valores a las celdas
+    resultados.loc["ratio_sharpe", "Descripción"] = "Ratio Sharpe" #Asignamos valores a las celdas
+
+    #Estrategia A 
+    resultados.loc["prom_mensual", "Estrategia A"] = estrategiaA["Rend Mensual"].dropna().mean() #Calculamos el rend promedio mensual y asignamos los valores a las celdas correspondientes en el DataFrame
+    resultados.loc["acum_mensual", "Estrategia A"] = estrategiaA["Rend Mensual Acum"][-1] #Calculamos el rend promedio acumulado y asignamos los valores a las celdas correspondientes en el DataFrame
+    resultados.loc["ratio_sharpe", "Estrategia A"] = (estrategiaA["Rend Mensual"].dropna().mean() - tasaRiesgo) / estrategiaA["Rend Mensual"].dropna().std() #Calculamos el ratio sharpe y asignamos los valores a las celdas correspondientes en el DataFrame
+   
+    #Estrategia B
+    resultados.loc["prom_mensual", "Estrategia B"] = estrategiaB["Rend Mensual"].dropna().mean()
+    resultados.loc["acum_mensual", "Estrategia B"] = estrategiaB["Rend Mensual Acum"][-1]
+    resultados.loc["ratio_sharpe", "Estrategia B"] = (estrategiaB["Rend Mensual"].dropna().mean() - tasaRiesgo) / estrategiaB["Rend Mensual"].dropna().std() 
+
+    return resultados
+
 
 
 
