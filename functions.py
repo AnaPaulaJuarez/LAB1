@@ -27,23 +27,20 @@ from pypfopt import risk_models
 from pypfopt import expected_returns
 
 
-def descargaPrecios(fechaInicio : "Fecha de inicio del backtest", fechaFin : "Fecha de fin del backtest", 
-                    datos : "Posiciones del NAFTRAC"):
-    """
-    descargaPrecios es una función que devuelve los precios históricos en temporalidad diaria y mensual 
-    para los tickers que componen al índice NAFTRAC en la fecha ingresada.
-    """
-    tickersFiltro = ["KOFL", "KOFUBL", "USD", "MXN", "BSMXB", "NMKA"]
-    tickers = {datos.loc[i, "Ticker"].replace("*", "").replace(".", "-") + ".MX":
-               datos.loc[i, "Peso (%)"] / 100 for i in range(len(datos)) if datos.loc[i, "Ticker"] not in tickersFiltro}
+def obtener_precios(fecha_inicio: str, fecha_fin: str, posiciones: pd.DataFrame): #La siguiente funcion es para sacar los precios, tomando en cuenta las fechas y posiciones
+    tickers_a_excluir = ["KOFL", "KOFUBL", "USD", "BSMXB", "NMKA"] #Definimos lista de strings
+    tickers = {posiciones.loc[i, "Ticker"].replace("*", "").replace(".", "-") + ".MX": #Definimos diccionario, obtenemos el valor en el DataFrame posiciones en la fila i y columna "Ticker", y reemplazamos el carácter "*" con un espacio vacío y el carácter "." con un guión. 
+               #Finalmente, agregamos la cadena ".MX".
+               posiciones.loc[i, "Peso (%)"] / 100 for i in range(len(posiciones)) if posiciones.loc[i, "Ticker"] not in tickers_a_excluir} #Obtenemos el valor en la columna "Peso (%)" y dividimos por 100.
 
-    precios = pd.DataFrame()
-    for ticker in tickers.keys():
-        precios[ticker] = yf.download(ticker, start=fechaInicio, end=fechaFin, progress=False)["Adj Close"]
+    precios = pd.DataFrame() #Creamos DataFrame 
+    for t in tickers.keys():
+        precios[t] = yf.download(t, start=fecha_inicio, end=fecha_fin, progress=False)["Adj Close"] #Descargamos precios ajustados ("Adj Close") y se asignan al DataFrame con el nombre del Ticker
         
-    precios.dropna(axis=1, inplace=True)
-    preciosMensuales = precios[precios.index.to_series().diff().dt.days > 28]
-    return precios, preciosMensuales, tickers
+    precios.dropna(axis=1, inplace=True) #Eliminamos columnas con valores faltantes
+    precios_mensuales = precios[precios.index.to_series().diff().dt.days > 28] #Precios que tienen una diferencia en días mayor a 28
+
+    return precios, precios_mensuales, tickers
 
     
 
