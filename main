@@ -1,0 +1,16 @@
+import data, functions, visualization
+
+def estrategiaInversionPasiva(capital : "Capital inicial", comision : "Comisión", 
+                              fechaInicio : "Fecha de inicio del backtest", fechaFin : "Fecha de fin del backtest"):
+    """
+    estrategiaInversionPasiva es una función que elabora el testeo de la estrategia de inversión pasiva.
+    
+    """
+    
+    datos = data.lecturaDatos(fechaInicio)
+    precios, preciosMensuales, tickers = functions.descargaobtener_precios(fecha_inicio, fecha_fin, posiciones)
+    df_pasiva_info, df_pasiva, df_pasiva_metricas = functions.optimizar_estrategia_pasiva(precios, tickers, capital, comision)
+    fig = visualization.visualEstrategia(df_pasiva)
+    
+    return df_pasiva_info, df_pasiva, df_pasiva_metricas, fig
+
