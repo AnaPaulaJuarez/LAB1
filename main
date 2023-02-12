@@ -26,3 +26,4 @@ def atribucionDesempeño(df_pasiva : "Estrategia Pasiva", df_activa : "Estrategi
     
     return medidas
 
+
