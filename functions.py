@@ -143,7 +143,8 @@ def rendimientoAtribuido(estrategiaA : pd.DataFrame, estrategiaB : pd.DataFrame,
 
     return resultados
 
-    
+
+
 
 
 
