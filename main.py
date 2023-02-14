@@ -12,7 +12,7 @@ def estrategiaInversionPasiva(capital: float, comision: float, fechaInicio: str,
     """
     
     datos = data.lecturaDatos(fechaInicio)
-    precios, preciosMensuales, tickers = functions.descargaobtener_precios(fecha_inicio, fecha_fin, posiciones)
+    precios, preciosMensuales, tickers = functions.obtener_precios (fecha_inicio=str, fecha_fin=str, posiciones=pd.DataFrame)
     pos_info_pasiva, cap_evol_pasiva, metricas_pasiva = functions.optimizar_estrategia_pasiva(precios, tickers, capital, comision)
     fig = visualization.visualEstrategia(cap_evol_pasiva)
     
