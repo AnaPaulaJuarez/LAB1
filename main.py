@@ -12,7 +12,7 @@ def estrategiaInversionPasiva(capital: float, comision: float, fechaInicio: str,
     """
     
     datos = data.lecturaDatos(fechaInicio)
-    precios, preciosMensuales, tickers = functions.obtener_precios(fechaInicio, fechaFin, datos)
+    precios, preciosMensuales, tickers = functions.descargaobtener_precios(fecha_inicio, fecha_fin, posiciones)
     pos_info_pasiva, cap_evol_pasiva, metricas_pasiva = functions.optimizar_estrategia_pasiva(precios, tickers, capital, comision)
     fig = visualization.visualEstrategia(cap_evol_pasiva)
     
@@ -39,4 +39,3 @@ def atribucionDesempeño(df_pasiva: pd.DataFrame, df_activa: pd.DataFrame, tasaL
     medidas = functions.rendimientoAtribuido(df_pasiva, df_activa, tasaLibreRiesgo)
     
     return medidas
-
