@@ -14,15 +14,11 @@ import pandas as pd
 pd.set_option('display.float_format', lambda x: '%.4f' % x)
 import yfinance as yf
 import numpy as np
-import pypfopt as pf
 
-from pypfopt import EfficientFrontier
-from pypfopt import risk_models
-from pypfopt import expected_returns
 
 def obtener_precios(fecha_inicio: str, fecha_fin: str, posiciones: pd.DataFrame): #La siguiente funcion es para sacar los precios, tomando en cuenta las fechas y posiciones
-    tickers_a_excluir = ["KOFL", "KOFUBL", "USD", "BSMXB", "NMKA"] #Definimos lista de strings
-    tickers = {posiciones.loc[i, "Ticker"].replace("*", "").replace(".", "-") + ".MX": #Definimos diccionario, obtenemos el valor en el DataFrame posiciones en la fila i y columna "Ticker", y reemplazamos el carácter "*" con un espacio vacío y el carácter "." con un guión. 
+    tickers_a_excluir = ["KOFL", "KOFUBL", "USD", "BSMXB", "NMKA",'MXN'] #Definimos lista de strings
+    tickers = {posiciones.loc[i, "Ticker"].replace("*", "").replace(".", "-") + ".MX": #Definimos diccionario, obtenemos el valor en el DataFrame posiciones en la fila i y columna "Ticker", y reemplazamos el carácter "*" con un espacio vacío y el carácter "." con un guión.
                #Finalmente, agregamos la cadena ".MX".
                posiciones.loc[i, "Peso (%)"] / 100 for i in range(len(posiciones)) if posiciones.loc[i, "Ticker"] not in tickers_a_excluir} #Obtenemos el valor en la columna "Peso (%)" y dividimos por 100.
 
@@ -40,7 +36,7 @@ def optimizar_estrategia_pasiva(precios, tickers, capital, comision):
     pos_info_pasiva = pd.DataFrame(index=precios.columns, columns=["Acciones", "Costo Neto", "Comisión", "Costo Final"])  #DataFrame para almacenar posiciones iniciales 
     
     # Posiciones iniciales
-    pos_info_pasiva["Acciones"] = np.floor(capital * tickers / (precios.iloc[0] * (1 + comision))) #Clcula la cantidad de acciones que se pueden comprar con el capital inicial teniendo en cuenta la comisión
+    pos_info_pasiva["Acciones"] = np.floor(list(capital) * tickers / (precios.iloc[0] * (1 + comision))) #Clcula la cantidad de acciones que se pueden comprar con el capital inicial teniendo en cuenta la comisión
     pos_info_pasiva["Costo Neto"] = pos_info_pasiva["Acciones"] * precios.iloc[0] #Se calcula el costo neto de las acciones adquiridas, multiplicando la cantidad de acciones por el precio por acción
     pos_info_pasiva["Comisión"] = pos_info_pasiva["Acciones"] * precios.iloc[0] * comision #Se calcula el costo de la comisión, multiplicando la cantidad de acciones por el precio por acción y la comisión
     pos_info_pasiva["Costo Final"] = pos_info_pasiva["Acciones"] * precios.iloc[0] * (1 + comision) #Costo final = costo neto + la comisión
@@ -59,4 +55,5 @@ def optimizar_estrategia_pasiva(precios, tickers, capital, comision):
     metricas_pasiva = pd.DataFrame({"Capital Inicial": capital, "Capital Invertido": cap_inv, "Efectivo": capital - cap_inv, "Capital Final": capital - cap_inv + cap_evol_pasiva["Evo Capital"].iloc[-1], "Rend. Efectivo %": cap_evol_pasiva["Rend. Mensual Acum."].iloc[-1] * 100}, index=["Estrategia Pasiva"])  
     
     return pos_info_pasiva, cap_evol_pasiva, metricas_pasiva
+
 
